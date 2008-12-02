@@ -1,0 +1,7 @@
+Linkage FAIL
+
+Simple Firefox Extension for alerting you when a page has some external elements which aren't linked properly.
+
+Use when busting out simple HTML changes and you aren't using Firebug Net tab.
+
+On / Off switch - Firefox > Tools > Add-ons > Extensions Enable / Disable
