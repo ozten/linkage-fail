@@ -1,0 +1,36 @@
+#borkenLink-panel{
+  position: fixed;
+  top: 10px;
+  left: 10px;
+  -moz-border-radius: 25px; /*-bottomleft:25px;
+  -moz-border-radius-bottomright:25px;
+  -moz-border-radius-topleft:25px;
+  -moz-border-radius-topright:25px; */
+  /* TODO frosted png */
+  background:#FFFFFF none repeat scroll 0 0;
+  border:4px solid #CCCCCC;
+  padding:10px;
+}
+#borkenLink-panel h2{
+    float: left;
+    margin: 10px 10px;
+}
+#borkenLink-panel button{
+    float: right;
+    margin: 10px 10px auto auto;
+}
+ul#borkenLink-list {
+    clear: both
+}
+#borkenLink-list li{
+    margin-right: 10px;
+}
+#borkenLink-list > p.url{
+    font-family: monospace;
+}
+#borkenLink-panel span, #borkenLink-panel h2{
+    font-family: Impact;
+}
+#borkenLink-panel .fail{
+    font-size: 300px;
+}

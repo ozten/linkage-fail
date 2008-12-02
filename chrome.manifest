@@ -1,0 +1,4 @@
+content	borkenLink	content/ contentaccessible=yes
+locale	borkenLink	en-US	locale/en-US/
+skin	borkenLink	classic/1.0	skin/
+overlay	chrome://browser/content/browser.xul	chrome://borkenLink/content/firefoxOverlay.xul
