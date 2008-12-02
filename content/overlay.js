@@ -69,21 +69,21 @@ var BorkenLink = {
         this.domWindowList.push(aWebProgress.DOMWindow.content.location);
         //log('aWebProgress.DOMWindow=' + aWebProgress.DOMWindow.content.location);
       }*/
+      
       if(aFlag & this.STATE_STOP){
+      
         if( aStatus == 0){
           if(BorkenLink.borkenLinks.length > 0){
             BorkenLink.displayLinks();
+            $('head', window.content.document).append(
+          //This should work because we have contentaccessible=yes in chrome.manifest?
+          "<link type='text/css' rel='stylesheet' href='chrome://linkage-fail/content/stylo.css'></link>");
           }
         }else{
           error("Underlying request failed... code=" + aStatus);
         }
-        $('head', window.content.document).append(
-          //This works because we have contentaccessible=yes in chrome.manifest
-          "<link type='text/css' rel='stylesheet' href='chrome://linkage-fail/content/stylo.css'></link>");
       }
-      
       return 0;
-    
     },
     onLocationChange: function(aProgress, aRequest, aURI){
       // This fires when the location bar changes; i.e load event is confirmed
@@ -154,10 +154,10 @@ var BorkenLink = {
 
 //log('getBrowser()' + getBrowser());
 
-//aok var observer = window.Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
-//aok observer.addObserver(BorkenLink.httpObserver, "http-on-examine-response", false);
+var observer = window.Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
+observer.addObserver(BorkenLink.httpObserver, "http-on-examine-response", false);
 
-//getBrowser().addProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_ALL);
+getBrowser().addProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
 /* window.addEventListener("unload", function(e) {
     getBrowser().removeProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_ALL);
   }, false);
