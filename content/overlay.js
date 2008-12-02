@@ -79,7 +79,7 @@ var BorkenLink = {
         }
         $('head', window.content.document).append(
           //This works because we have contentaccessible=yes in chrome.manifest
-          "<link type='text/css' rel='stylesheet' href='chrome://borkenLink/content/stylo.css'></link>");
+          "<link type='text/css' rel='stylesheet' href='chrome://linkage-fail/content/stylo.css'></link>");
       }
       
       return 0;
@@ -157,7 +157,7 @@ var BorkenLink = {
 //aok var observer = window.Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 //aok observer.addObserver(BorkenLink.httpObserver, "http-on-examine-response", false);
 
-getBrowser().addProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_ALL);
+//getBrowser().addProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_ALL);
 /* window.addEventListener("unload", function(e) {
     getBrowser().removeProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_ALL);
   }, false);

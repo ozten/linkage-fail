@@ -2,13 +2,12 @@
 <RDF xmlns="http://www.w3.org/1999/02/22-rdf-syntax-ns#" 
  xmlns:em="http://www.mozilla.org/2004/em-rdf#">
   <Description about="urn:mozilla:install-manifest">
-    <em:id>ozten@borkenLink</em:id>
-    <em:name>borkenLink</em:name>
-    <em:version>1.2</em:version>
+    <em:id>ozten@linkage-fail</em:id>
+    <em:name>linkage FAIL</em:name>
+    <em:version>0.1</em:version>
     <em:creator>Ozten</em:creator>
-    <em:description>Simple Firefox extension shows you borken links to elements in your page. If images, css, or
-    JavaScript files have a problem, you get a list of urls.</em:description>
-    <em:homepageURL>http://ozten.com/code/borkenLink</em:homepageURL>
+    <em:description>Simple Web Design extension for alerting you when your page has some elementts which aren't linked properly.</em:description>
+    <em:homepageURL>http://ozten.com/code/linkage-fail</em:homepageURL>
     <em:targetApplication>
       <Description>
         <em:id>{ec8030f7-c20a-464f-9b0e-13a3a9e97384}</em:id> <!-- firefox -->

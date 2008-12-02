@@ -35,14 +35,14 @@
   - 
   - ***** END LICENSE BLOCK ***** -->
 
-<?xml-stylesheet href="chrome://borkenLink/skin/overlay.css" type="text/css"?>
-<!DOCTYPE overlay SYSTEM "chrome://borkenLink/locale/borkenLink.dtd">
+<?xml-stylesheet href="chrome://linkage-fail/skin/overlay.css" type="text/css"?>
+<!DOCTYPE overlay SYSTEM "chrome://linkage-fail/locale/borkenLink.dtd">
 <overlay id="test-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
   <script src="overlay.js"/>
   <script src="jquery-1.2.6.js"/>
   <stringbundleset id="stringbundleset">
-    <stringbundle id="test-strings" src="chrome://borkenLink/locale/borkenLink.properties"/>
+    <stringbundle id="test-strings" src="chrome://linkage-fail/locale/borkenLink.properties"/>
   </stringbundleset>
 
   <popup id="contentAreaContextMenu">
