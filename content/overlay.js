@@ -58,26 +58,16 @@ var BorkenLink = {
         return this;
       throw Components.results.NS_NOINTERFACE;
     },
-    domWindowList: [],
     onStateChange: function(aWebProgress, aRequest, aFlag, aStatus){
-    // If you use webProgressListener for more than one tab/window, use
-    // aWebProgress.DOMWindow to obtain the tab/window which triggers the state change
-      /* if(aFlag & this.STATE_START){
-      // This fires when the load event is initiated
-        log('STATE_START');
-        //TODO clean up links here, based on tab
-        this.domWindowList.push(aWebProgress.DOMWindow.content.location);
-        //log('aWebProgress.DOMWindow=' + aWebProgress.DOMWindow.content.location);
-      }*/
-      
-      if(aFlag & this.STATE_STOP){
-      
+      if(aFlag & this.STATE_STOP){        
         if( aStatus == 0){
-          if(BorkenLink.borkenLinks.length > 0){
-            BorkenLink.displayLinks();
+          var site = aWebProgress.DOMWindow;
+          BorkenLink.borkenLinks[site] = BorkenLink.borkenLinks[site] || [];
+          if(BorkenLink.borkenLinks[site].length > 0){
+            BorkenLink.displayLinks(site);
             $('head', window.content.document).append(
-          //This should work because we have contentaccessible=yes in chrome.manifest?
-          "<link type='text/css' rel='stylesheet' href='chrome://linkage-fail/content/stylo.css'></link>");
+              //This works because we have contentaccessible=yes in chrome.manifest?
+              "<link type='text/css' rel='stylesheet' href='chrome://linkage-fail/content/stylo.css'></link>");
           }
         }else{
           error("Underlying request failed... code=" + aStatus);
@@ -89,7 +79,6 @@ var BorkenLink = {
       // This fires when the location bar changes; i.e load event is confirmed
       // or when the user switches tabs. If you use webProgressListener for more than one tab/window,
       // use aProgress.DOMWindow to obtain the tab/window which triggered the change.
-
       return 0;
     },
 
@@ -115,10 +104,21 @@ var BorkenLink = {
         return this;
       throw Components.results.NS_NOINTERFACE;
     },
-    observe: function( /* nsIHttpChannel */ req, /* String */ aTopic, /* String */ aData){
-      if( parseInt(req.responseStatus ) > 399 ){
-        //TODO this list must be per tab
-        BorkenLink.borkenLinks.push({
+    observe: function( /* nsIHttpChannel */ req, aTopic, aData){      
+      if( parseInt(req.responseStatus ) > 399 && req.notificationCallbacks ){
+        var interfaceRequestor = req.notificationCallbacks.QueryInterface(Components.interfaces.nsIInterfaceRequestor);
+        var win;
+        try{
+          win = interfaceRequestor.getInterface(Components.interfaces.nsIDOMWindow);
+        }catch(e){
+          log("Unable to figure out which tab we are in... " + e);
+          return;
+        }
+        var links = BorkenLink.borkenLinks;
+        var site = win;
+        links[site] = links[site] || [];
+        
+        links[site].push({
           status: parseInt(req.responseStatus),
           message: req.responseStatusText,
           url: req.originalURI.asciiSpec
@@ -127,21 +127,23 @@ var BorkenLink = {
     }
   },
   borkenLinks: [],
-  displayLinks: function(){
+  displayLinks: function(site){
+    BorkenLink.borkenLinks[site] = BorkenLink.borkenLinks[site] || [];
+    
     var ulPresent = $('#borkenLink-list', window.content.document).length;
     if(ulPresent == 0){
       $('body', window.content.document).append(
-        '<div id="borkenLink-panel"><h2>Borken Link</h2><button>Close</button><ul id="borkenLink-list"></ul><span class="fail">FAIL</span></div>'
+        '<div id="borkenLink-panel"><h2>Linkage</h2><button>Close</button><ul id="borkenLink-list"></ul><span class="fail">FAIL</span></div>'
       );
     }
-    for(var i=0; i < BorkenLink.borkenLinks.length; i++){    
-      var link = BorkenLink.borkenLinks[i];
+    for(var i=0; i < BorkenLink.borkenLinks[site].length; i++){    
+      var link = BorkenLink.borkenLinks[site][i];
       $('#borkenLink-list', window.content.document).append(
         "<li>" + link.status +
         " : " + link.message +
         "<p>" + link.url + "</p></li>");
     }
-    BorkenLink.borkenLinks = [];
+    BorkenLink.borkenLinks[site] = [];
     $('#borkenLink-panel button', window.content.document).click(function(){
       //executes in browser window, not xul window
       $('#borkenLink-panel', window.content.document).toggle();
@@ -166,7 +168,6 @@ getBrowser().addProgressListener(BorkenLink.webProgressListener, Components.inte
 //and https://developer.mozilla.org/en/Code_snippets/Progress_Listeners
 window.addEventListener("load", function() {
   //This fires once per XUL Window
-  log("LOADING window.addEventListener");
   myExtension.init(); }, false);
 window.addEventListener("unload", function() {
   //This fires once per XUL Window
