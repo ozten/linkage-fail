@@ -109,9 +109,9 @@ var BorkenLink = {
         var interfaceRequestor = req.notificationCallbacks.QueryInterface(Components.interfaces.nsIInterfaceRequestor);
         var win;
         try{
-          win = interfaceRequestor.getInterface(Components.interfaces.nsIDOMWindow);
+          win = interfaceRequestor.getInterface(Components.interfaces.nsIDOMWindow);          
         }catch(e){
-          log("Unable to figure out which tab we are in... " + e);
+          log("Unable to figure out which tab we are in ... " + e);
           return;
         }
         var links = BorkenLink.borkenLinks;
@@ -150,11 +150,6 @@ var BorkenLink = {
      });
   }
 };
-
-// I think this load is for the origonal browser and not subsequent pages
-//aok window.addEventListener("load", function(e) { BorkenLink.onBrowserWindowLoad(e); }, false);
-
-//log('getBrowser()' + getBrowser());
 
 var observer = window.Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 observer.addObserver(BorkenLink.httpObserver, "http-on-examine-response", false);
