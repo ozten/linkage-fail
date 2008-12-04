@@ -159,39 +159,11 @@ var BorkenLink = {
 var observer = window.Components.classes["@mozilla.org/observer-service;1"].getService(Components.interfaces.nsIObserverService);
 observer.addObserver(BorkenLink.httpObserver, "http-on-examine-response", false);
 
-getBrowser().addProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_DOCUMENT);
-/* window.addEventListener("unload", function(e) {
-    getBrowser().removeProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgress.NOTIFY_STATE_ALL);
+//Load progress listeners at window load ala
+//https://addons.mozilla.org/en-US/firefox/addon/1433 extended status bar
+window.addEventListener("load", function(){
+  window.getBrowser().addProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgressListener.STATE_START);
   }, false);
-*/
-//messing with https://developer.mozilla.org/en/Code_snippets/On_page_load
-//and https://developer.mozilla.org/en/Code_snippets/Progress_Listeners
-window.addEventListener("load", function() {
-  //This fires once per XUL Window
-  myExtension.init(); }, false);
-window.addEventListener("unload", function() {
-  //This fires once per XUL Window
-  log("UNLOADING window.addEventListener"); }, false);
-
-var myExtension = {
-  init: function() {
-    var appcontent = document.getElementById("appcontent");   // browser
-    if(appcontent){
-        appcontent.addEventListener("DOMContentLoaded", myExtension.onPageLoad, true);
-        //appcontent.addEventListener("DOMContentUnLoaded", myExtension.onPageUnLoad, true);
-
-    }
-  },
-  onPageLoad: function(aEvent) {
-    //This fires once each time a 'page' loads. This could be just an about:blank XUL Window, or a webpage loading up.
-    var doc = aEvent.originalTarget; // doc is document that triggered "onload" event
-    log("LOADING appcontent.addEventListener(DOMContentLoaded doc.location=" + doc.location);
-    // do something with the loaded page.
-    // doc.location is a Location object (see below for a link).
-    // You can use it to make your code executed on certain pages only.
-    //if(doc.location.href.search("forum") > -1)
-    //  alert("a forum page is loaded");
-  }
-}
-
-
+window.addEventListener("unload", function(){
+  window.getBrowser().removeProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgressListener.STATE_STOP);
+  }, false);
