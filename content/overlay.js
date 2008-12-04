@@ -109,7 +109,9 @@ var BorkenLink = {
         var interfaceRequestor = req.notificationCallbacks.QueryInterface(Components.interfaces.nsIInterfaceRequestor);
         var win;
         try{
-          win = interfaceRequestor.getInterface(Components.interfaces.nsIDOMWindow);          
+          win = interfaceRequestor.getInterface(Components.interfaces.nsIDOMWindow);
+          //Has user clicked on a bad link?
+          if(win.location == req.originalURI.asciiSpec) return;
         }catch(e){
           log("Unable to figure out which tab we are in ... " + e);
           return;
