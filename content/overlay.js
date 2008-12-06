@@ -38,6 +38,11 @@ function log(aMessage) {
   var consoleService = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
   consoleService.logStringMessage("borkenLink: " + aMessage + " :" + Date());
 }
+function error(aMessage) {
+  log("ERROR: " + aMessage);
+}
+
+error("test");
 
 var BorkenLink = {
   onBrowserWindowLoad: function() {
@@ -176,4 +181,3 @@ window.addEventListener("load", function(){
 window.addEventListener("unload", function(){
   window.getBrowser().removeProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgressListener.STATE_STOP);
   }, false);
-
