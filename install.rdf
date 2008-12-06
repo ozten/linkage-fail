@@ -4,7 +4,7 @@
   <Description about="urn:mozilla:install-manifest">
     <em:id>ozten@linkage-fail</em:id>
     <em:name>linkage FAIL</em:name>
-    <em:version>0.2</em:version>
+    <em:version>0.3</em:version>
     <em:creator>Ozten</em:creator>
     <em:description>Simple Web Design extension for alerting you when your page has some elementts which aren't linked properly.</em:description>
     <em:homepageURL>http://ozten.com/code/linkage-fail</em:homepageURL>

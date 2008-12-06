@@ -38,9 +38,6 @@ function log(aMessage) {
   var consoleService = Components.classes["@mozilla.org/consoleservice;1"].getService(Components.interfaces.nsIConsoleService);
   consoleService.logStringMessage("borkenLink: " + aMessage + " :" + Date());
 }
-function error(aMessage){
-  Components.utils.reportError("borkenLink:" + aMessage);
-}
 
 var BorkenLink = {
   onBrowserWindowLoad: function() {
@@ -60,11 +57,14 @@ var BorkenLink = {
     },
     onStateChange: function(aWebProgress, aRequest, aFlag, aStatus){
       if(aFlag & this.STATE_STOP){        
-        if( aStatus == 0){
+        if( aStatus == 0){          
           var site = aWebProgress.DOMWindow;
           BorkenLink.borkenLinks[site] = BorkenLink.borkenLinks[site] || [];
-          if(BorkenLink.borkenLinks[site].length > 0){
+          BorkenLink.canHasBorkenLinks[site] = BorkenLink.canHasBorkenLinks[site] || false;
+          
+          if(BorkenLink.canHasBorkenLinks[site]){
             BorkenLink.displayLinks(site);
+            
             $('head', window.content.document).append(
               //This works because we have contentaccessible=yes in chrome.manifest?
               "<link type='text/css' rel='stylesheet' href='chrome://linkage-fail/content/stylo.css'></link>");
@@ -104,14 +104,17 @@ var BorkenLink = {
         return this;
       throw Components.results.NS_NOINTERFACE;
     },
-    observe: function( /* nsIHttpChannel */ req, aTopic, aData){      
-      if( parseInt(req.responseStatus ) > 399 && req.notificationCallbacks ){
-        var interfaceRequestor = req.notificationCallbacks.QueryInterface(Components.interfaces.nsIInterfaceRequestor);
+    observe: function( /* nsIHttpChannel */ req, aTopic, aData){
+      var http = req.QueryInterface(Components.interfaces.nsIHttpChannel);
+      
+      if( parseInt(http.responseStatus ) > 399 && http.notificationCallbacks ){
+        var interfaceRequestor = http.notificationCallbacks.QueryInterface(Components.interfaces.nsIInterfaceRequestor);
         var win;
         try{
           win = interfaceRequestor.getInterface(Components.interfaces.nsIDOMWindow);
+          
           //Has user clicked on a bad link?
-          if(win.location == req.originalURI.asciiSpec) return;
+          if(win.location == http.originalURI.asciiSpec) return;
         }catch(e){
           log("Unable to figure out which tab we are in ... " + e);
           return;
@@ -121,14 +124,22 @@ var BorkenLink = {
         links[site] = links[site] || [];
         
         links[site].push({
-          status: parseInt(req.responseStatus),
-          message: req.responseStatusText,
-          url: req.originalURI.asciiSpec
-        });
+          status: parseInt(http.responseStatus),
+          message: http.responseStatusText,
+          url: http.originalURI.asciiSpec
+        });        
+        BorkenLink.canHasBorkenLinks[site] = BorkenLink.canHasBorkenLinks[site] || false;
+        
+        if( ! BorkenLink.canHasBorkenLinks[site] ){
+          if( ! /.*favicon.ico$/.test(req.originalURI.asciiSpec)){
+            BorkenLink.canHasBorkenLinks[site] = true;
+          }
+        }
       }
     }
   },
   borkenLinks: [],
+  canHasBorkenLinks: [],
   displayLinks: function(site){
     BorkenLink.borkenLinks[site] = BorkenLink.borkenLinks[site] || [];
     
@@ -146,7 +157,8 @@ var BorkenLink = {
         "<p>" + link.url + "</p></li>");
     }
     BorkenLink.borkenLinks[site] = [];
-    $('#borkenLink-panel button', window.content.document).click(function(){
+    BorkenLink.canHasBorkenLinks[site] = false;
+    $('#borkenLink-panel button', window.content.document).click(function(e){
       //executes in browser window, not xul window
       $('#borkenLink-panel', window.content.document).toggle();
      });
@@ -164,3 +176,4 @@ window.addEventListener("load", function(){
 window.addEventListener("unload", function(){
   window.getBrowser().removeProgressListener(BorkenLink.webProgressListener, Components.interfaces.nsIWebProgressListener.STATE_STOP);
   }, false);
+
