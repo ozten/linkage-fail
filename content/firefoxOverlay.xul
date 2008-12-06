@@ -39,8 +39,9 @@
 <!DOCTYPE overlay SYSTEM "chrome://linkage-fail/locale/borkenLink.dtd">
 <overlay id="test-overlay"
          xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
-  <script src="overlay.js"/>
   <script src="jquery-1.2.6.js"/>
+  <script src="overlay.js"/>
+
   <stringbundleset id="stringbundleset">
     <stringbundle id="test-strings" src="chrome://linkage-fail/locale/borkenLink.properties"/>
   </stringbundleset>
