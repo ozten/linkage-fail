@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <title>i/love.xbm :: after load test</title>
+    <link rel="stylesheet" rev="stylesheet" href="missing.css" type="text/css">
+
+</head>
+<body onload="ya_its_obtrusive_deal_with_it();">
+    <h1>Broken image 1 second after page load.</h1>
+  <script>
+function ya_its_obtrusive_deal_with_it(){
+  setTimeout(
+    function(){
+      new Image().src = "i/love.xbm";
+    }, 1000);
+}
+  </script>
+</body>
+</html>
